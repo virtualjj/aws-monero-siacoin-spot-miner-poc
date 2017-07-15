@@ -4,4 +4,4 @@ TL;DR - Mining Siacoin and Monero cryptocurrency is not profitable by any means 
 
 
 [![Launch CloudFormation Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png
-)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=siacoin-monero-miner&templateURL=	https://s3-us-west-2.amazonaws.com/github.aws-monero-siacoin-spot-miner-poc/aws-monero-siacoin-spot-miner-poc.yml)
+)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=siacoin-monero-miner&templateURL=https://s3-us-west-2.amazonaws.com/github.aws-monero-siacoin-spot-miner-poc/aws-monero-siacoin-spot-miner-poc.yml)
