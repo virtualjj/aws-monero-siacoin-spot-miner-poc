@@ -85,7 +85,7 @@ Parameters:
   MoneroMiningPool:
     Description: Enter your Monero mining pool. Make sure you have the correct address and port. (eg. the.domain.name:port)
     Type: String
-    Default: pool.minexmr.com:4444
+    Default: mine.xmrpool.net:3333
   NumOfSpots:
     Description: Select a number of spot instances to bid for. You will be charged for any instances that start. AWS typically limits a region to 20 instances depending on the instance type but you can request an increase.
     Type: Number
@@ -126,20 +126,16 @@ Parameters:
     Default: 0.25
     AllowedPattern: "(\\d{1})\\.(\\d{1,3})"
   WorkerName:
-    Description: Enter a worker name to identify hashing effortin the https://siamining.com/addresses console.
+    Description: Enter a worker name to identify hashing efforts.
     Type: String
     Default: AWS-SPOT-MINER
   InstanceSize:
-    Description: Choose an instance size. Stick with the default unless you have money to throw away.
+    Description: Choose either a p2 or g2 instance type.
     Type: String
     Default: p2.xlarge
-    # Probably should remove the large, expensive instances but leave for those that have budget to test.
     AllowedValues:
     - g2.2xlarge
     - p2.xlarge
-    - g2.8xlarge
-    - p2.8xlarge
-    - p2.16xlarge
   MinerIntensity:
     Description: Select miner intensity for marlin. Keep the default of 28 if not sure.
     Type: String
@@ -166,8 +162,9 @@ Mappings:
   RegionMap:     
     # EU (Ireland)
     eu-west-1:
+      # Redundant to have same AMI but could be useful in future if AMI should be different for each GPU family type.
       p2: ami-ed947194
-      g2: ami-ed947194 
+      g2: ami-ed947194
     # Asia Pacific (Tokyo)
     ap-northeast-1:
       p2: ami-4e0e1f29
@@ -179,11 +176,10 @@ Mappings:
     # US East (N. Virginia)
     us-east-1:
       p2: ami-c5eadcd3
-      g2: ami-c5eadcd3    
+      g2: ami-c5eadcd3
     # US East (Ohio) - only supports p2 family.
     us-east-2:
       p2: ami-c8f3a8ad
-      g2: ami-c8f3a8ad
     # US West (Oregon)
     us-west-2:
       p2: ami-aaebfcd3
@@ -193,15 +189,14 @@ Mappings:
       g2: ami-f35cd290
     # Asia Pacific (Sydney)
     ap-southeast-2:
+      p2: ami-e77c6f84
       g2: ami-e77c6f84    
     # EU (Frankfurt) - only supports g2 family.
     eu-central-1:
       g2: ami-cf3294a0    
     # US West (N. California) - only supports g2 family.
     us-west-1:
-      g2: ami-68002c08   
-#Conditions:
-#  UseG2Family: !Equals [ !Ref GPUType, g2 ]
+      g2: ami-68002c08
 Resources:
   SpotFleet:
     DependsOn:
@@ -252,7 +247,7 @@ Resources:
               #
               # p2 GPU instances have some special optimizations to squeeze out a bit more performance.
               # Reference: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/accelerated-computing-instances.html#optimize_gpu
-              # 
+              
               getgputype=$(nvidia-smi -q | grep 'Product Brand' | awk '{ print $4 }')
               if [ $getgputype == "Tesla" ];then
                 nvidia-smi -pm 1
